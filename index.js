@@ -26,12 +26,13 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
-        const AllCarRoomCategoryCollection = client.db('HotelBooking').collection('Room_Category');
+        const AllRoomCategoryCollection = client.db('HotelBooking').collection('Room_Category');
+        const AllRoomsCollection = client.db('HotelBooking').collection('AllRooms');
 
         // All Create api works here
         // All Room Category section
         app.get('/roomCategory', async (req, res) => {
-            const cursor = AllCarRoomCategoryCollection.find();
+            const cursor = AllRoomCategoryCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
@@ -39,26 +40,77 @@ async function run() {
         app.get('/roomCategory/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
-            const result = await AllCarRoomCategoryCollection.findOne(query);
+            const result = await AllRoomCategoryCollection.findOne(query);
             res.send(result);
         })
 
         app.post('/roomCategory', async (req, res) => {
             const newBrand = req.body;
             console.log(newBrand);
-            const result = await AllCarRoomCategoryCollection.insertOne(newBrand);
+            const result = await AllRoomCategoryCollection.insertOne(newBrand);
             res.send(result);
         })
 
         app.delete('/roomCategory/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
-            const result = await AllCarRoomCategoryCollection.deleteOne(query);
+            const result = await AllRoomCategoryCollection.deleteOne(query);
             res.send(result);
         })
 
+
+
+
         // All Room Category section
 
+
+        // All Room Category section
+        app.get('/allRooms', async (req, res) => {
+            const cursor = AllRoomsCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.get('/allRooms/:CategoryName', async (req, res) => {
+            const CategoryName = req.params.CategoryName;
+            const cursor = AllRoomsCollection.find({ CategoryName: CategoryName });
+            const result = await cursor.toArray();
+            res.send(result);
+        });
+
+        app.get('/allRooms/:CategoryName/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await AllRoomsCollection.findOne(query);
+            // console.log(result);
+            res.send(result);
+        })
+        app.get('/allRooms/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await AllRoomsCollection.findOne(query);
+            res.send(result);
+        })
+
+
+
+
+        app.get('/allRoomsByCategory/:CategoryName', async (req, res) => {
+            const CategoryName = req.params.CategoryName;
+            const cursor = AllRoomsCollection.find({ CategoryName: CategoryName });
+            const result = await cursor.toArray();
+            res.send(result);
+        });
+
+        app.post('/allRooms', async (req, res) => {
+            const newBrand = req.body;
+            console.log(newBrand);
+            const result = await AllRoomsCollection.insertOne(newBrand);
+            res.send(result);
+        })
+
+
+        // All Room Category section
 
         // All Create api works here
 
