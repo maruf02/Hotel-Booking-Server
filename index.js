@@ -171,7 +171,13 @@ async function run() {
             res.send(result);
         });
 
-
+        app.get('/Cart/:user/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await MyCartCollection.findOne(query);
+            // console.log(result);
+            res.send(result);
+        })
         app.post('/Cart', async (req, res) => {
             const newCart = req.body;
             console.log(newCart);
