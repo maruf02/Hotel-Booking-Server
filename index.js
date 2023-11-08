@@ -28,6 +28,7 @@ async function run() {
         await client.connect();
         const AllRoomCategoryCollection = client.db('HotelBooking').collection('Room_Category');
         const AllRoomsCollection = client.db('HotelBooking').collection('AllRooms');
+        const MyCartCollection = client.db('HotelBooking').collection('mycart');
 
         // All Create api works here
         // All Room Category section
@@ -109,9 +110,102 @@ async function run() {
             res.send(result);
         })
 
+        app.put('/allRooms/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const option = { upsert: true }
+            const updateBrand = req.body;
+            const Brand = {
+                $set: {
+                    image: updateBrand.image,
+                    image1: updateBrand.image1,
+                    image2: updateBrand.image2,
+                    image3: updateBrand.image3,
+                    image4: updateBrand.image4,
+                    name: updateBrand.name,
+                    CategoryName: updateBrand.CategoryName,
+                    seatNum: updateBrand.seatNum,
+                    price: updateBrand.price,
+                    availability: updateBrand.availability,
+                    description: updateBrand.description
+                }
+            }
+
+            const result = await AllRoomsCollection.updateOne(filter, Brand, option);
+            console.log(updateBrand);
+            res.send(result);
+        })
+
+
+        app.patch('/allRooms/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const updateAvail = req.body;
+            console.log(updateAvail);
+            const updateDoc = {
+                $set: {
+                    availability: updateAvail.availability,
+                    seatNum: updateAvail.seatNum
+                }
+            };
+            const result = await AllRoomsCollection.updateOne(filter, updateDoc);
+            res.send(result);
+
+
+        })
 
         // All Room Category section
+        // For my cart
 
+        app.get('/Cart', async (req, res) => {
+            const cursor = MyCartCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.get('/Cart/:user', async (req, res) => {
+            const user = req.params.user;
+            const cursor = MyCartCollection.find({ userName: user });
+            const result = await cursor.toArray();
+            // console.log(result);
+            res.send(result);
+        });
+
+        app.post('/Cart', async (req, res) => {
+            const newCart = req.body;
+            console.log(newCart);
+            const result = await MyCartCollection.insertOne(newCart);
+            res.send(result);
+        })
+
+        app.post('/Cart', async (req, res) => {
+            const newCart = req.body;
+            console.log(newCart);
+
+            const filter = { _id: new ObjectId(newCart.roomId) };
+            const update = {
+                $set: { availability: 'No' }
+            };
+            const updateResult = await AllRoomsCollection.updateOne(filter, update);
+
+            if (updateResult.modifiedCount === 1) {
+                const result = await MyCartCollection.insertOne(newCart);
+                res.send(result);
+            } else {
+                res.status(500).json({ error: 'Failed to update availability' });
+            }
+        });
+
+
+
+        app.delete('/Cart/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await MyCartCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        // For MyCart
         // All Create api works here
 
 
