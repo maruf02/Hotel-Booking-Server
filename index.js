@@ -145,7 +145,7 @@ async function run() {
             const updateDoc = {
                 $set: {
                     availability: updateAvail.availability,
-                    seatNum: updateAvail.seatNum
+
                 }
             };
             const result = await AllRoomsCollection.updateOne(filter, updateDoc);
@@ -210,6 +210,26 @@ async function run() {
         });
 
 
+        app.patch('/Cart/:user/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const updateAvail = req.body;
+            console.log(updateAvail);
+            const updateDoc = {
+                $set: {
+                    name1: updateAvail.name1,
+                    nid: updateAvail.nid,
+                    email: updateAvail.email,
+                    date: updateAvail.date,
+
+                }
+            };
+            const result = await MyCartCollection.updateOne(filter, updateDoc);
+            res.send(result);
+
+
+        })
+
 
         app.delete('/Cart/:id', async (req, res) => {
             const id = req.params.id;
@@ -217,6 +237,12 @@ async function run() {
             const result = await MyCartCollection.deleteOne(query);
             res.send(result);
         })
+        // app.delete('/Cart/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: new ObjectId(id) };
+        //     const result = await MyCartCollection.deleteOne(query);
+        //     res.send(result);
+        // })
 
         // For MyCart
         // All Create api works here
