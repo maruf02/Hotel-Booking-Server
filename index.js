@@ -170,13 +170,7 @@ async function run() {
             // console.log(result);
             res.send(result);
         });
-        // app.get('/Cart/:user', async (req, res) => {
-        //     const user = req.params.user;
-        //     const cursor = MyCartCollection.find({ userName: user });
-        //     const result = await cursor.toArray();
-        //     // console.log(result);
-        //     res.send(result);
-        // });
+
 
         app.post('/Cart', async (req, res) => {
             const newCart = req.body;
@@ -184,6 +178,12 @@ async function run() {
             const result = await MyCartCollection.insertOne(newCart);
             res.send(result);
         })
+        // app.post('/Cart', async (req, res) => {
+        //     const newCart = req.body;
+        //     console.log(newCart);
+        //     const result = await MyCartCollection.insertOne(newCart);
+        //     res.send(result);
+        // })
 
         app.post('/Cart', async (req, res) => {
             const newCart = req.body;
