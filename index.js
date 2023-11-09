@@ -11,8 +11,8 @@ const port = process.env.PORT || 5000;
 app.use(cors({
     origin: [
         'http://localhost:5173',
-        'https://cars-doctor-6c129.web.app',
-        'https://cars-doctor-6c129.firebaseapp.com'
+        'https://hotelbooking-client.web.app',
+        'https://hotelbooking-client.firebaseapp.com'
     ],
     credentials: true
 }));
@@ -303,6 +303,12 @@ async function run() {
         // for Review
         app.get('/review', async (req, res) => {
             const cursor = MyReviewCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+        app.get('/review/:roomId', async (req, res) => {
+            const roomId = req.params.roomId;
+            const cursor = MyReviewCollection.find({ roomId: roomId });
             const result = await cursor.toArray();
             res.send(result);
         })
