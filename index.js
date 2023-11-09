@@ -62,11 +62,12 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
         const AllRoomCategoryCollection = client.db('HotelBooking').collection('Room_Category');
         const AllRoomsCollection = client.db('HotelBooking').collection('AllRooms');
         const MyCartCollection = client.db('HotelBooking').collection('mycart');
         const MyReviewCollection = client.db('HotelBooking').collection('review');
+        const MyMessageCollection = client.db('HotelBooking').collection('message');
 
         // All Create api works here
         // auth related api
@@ -317,6 +318,18 @@ async function run() {
             const newCart = req.body;
             console.log(newCart);
             const result = await MyReviewCollection.insertOne(newCart);
+            res.send(result);
+        })
+        app.get('/message', async (req, res) => {
+            const cursor = MyMessageCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.post('/message', async (req, res) => {
+            const newCart = req.body;
+            console.log(newCart);
+            const result = await MyMessageCollection.insertOne(newCart);
             res.send(result);
         })
 
