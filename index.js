@@ -62,7 +62,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        // await client.connect();
+        await client.connect();
         const AllRoomCategoryCollection = client.db('HotelBooking').collection('Room_Category');
         const AllRoomsCollection = client.db('HotelBooking').collection('AllRooms');
         const MyCartCollection = client.db('HotelBooking').collection('mycart');
@@ -73,7 +73,7 @@ async function run() {
         app.post('/jwt', logger, async (req, res) => {
             const user = req.body;
             console.log('user for token', user);
-            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10h' });
 
             res.cookie('token', token, {
                 httpOnly: true,
@@ -206,6 +206,7 @@ async function run() {
             const updateDoc = {
                 $set: {
                     availability: updateAvail.availability,
+                    seatNum: updateAvail.seatNum,
 
                 }
             };
